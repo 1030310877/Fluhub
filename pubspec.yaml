@@ -27,6 +27,9 @@ dependencies:
   path_provider: ^1.6.7
   provider: ^4.0.5+1
   flutter_svg: ^0.17.4
+  corsac_jwt: ^0.2.2
+  dio: ^3.0.9
+  fluttertoast: ^4.0.0
 
 dev_dependencies:
   flutter_test:

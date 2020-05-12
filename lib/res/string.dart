@@ -6,7 +6,9 @@ class ConstString {
   static String get password => '密码';
   static String get phone => '手机';
   static String get account => '账号';
+  static String get personalToken => '个人授权码';
 
   static String get pleaseInputAccount => '请输入账号';
   static String get pleaseInputPwd => '请输入密码';
+  static String get pleaseInputPersonalToken => '请输入个人授权码';
 }
