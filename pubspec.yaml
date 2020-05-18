@@ -52,6 +52,9 @@ flutter:
     - assets/ic_pwd_hide.svg
     - assets/ic_pwd_show.svg
     - assets/ic_next.svg
+    - assets/ic_home.svg
+    - assets/ic_search.svg
+    - assets/ic_email.svg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

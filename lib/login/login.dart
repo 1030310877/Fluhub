@@ -1,7 +1,9 @@
 import 'package:fluhub/api/api_auth.dart';
 import 'package:fluhub/api/api_user.dart';
+import 'package:fluhub/main/homepage.dart';
 import 'package:fluhub/res/color.dart';
 import 'package:fluhub/res/string.dart';
+import 'package:fluhub/util/screenutil.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -20,9 +22,12 @@ class Login extends StatefulWidget {
 
 class LoginState extends State<Login> with TickerProviderStateMixin {
   bool isLogin = false;
+  bool pwdVisible = false;
 
   final TextEditingController _userNameCt = TextEditingController();
   final TextEditingController _tokenCt = TextEditingController();
+
+  int _animationDuration = 250;
 
   @override
   void initState() {
@@ -31,16 +36,14 @@ class LoginState extends State<Login> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    double screenWidth = MediaQuery.of(context).size.width;
-    double screenHeight = MediaQuery.of(context).size.height;
-    int animationDuration = 250;
     return MaterialApp(
       title: ConstString.login,
+      routes: <String, WidgetBuilder>{'/homepage': (_) => new HomePage()},
       home: Scaffold(
         body: SingleChildScrollView(
           child: Container(
             width: double.infinity,
-            height: screenHeight,
+            height: ScreenUtil.screenHeight,
             color: ConstColor.color1,
             child: Stack(
               children: <Widget>[
@@ -49,11 +52,13 @@ class LoginState extends State<Login> with TickerProviderStateMixin {
                   left: 0,
                   child: AnimatedSize(
                     vsync: this,
-                    duration: Duration(milliseconds: animationDuration),
-                    reverseDuration: Duration(milliseconds: animationDuration),
+                    duration: Duration(milliseconds: _animationDuration),
+                    reverseDuration: Duration(milliseconds: _animationDuration),
                     child: Container(
-                      width: screenWidth,
-                      height: isLogin ? screenHeight : screenHeight * 2 / 3,
+                      width: ScreenUtil.screenWidth,
+                      height: isLogin
+                          ? ScreenUtil.screenHeight
+                          : ScreenUtil.screenHeight * 2 / 3,
                       child: Center(
                         ///头像显示，这里先显示默认头像
                         child: SvgPicture.asset(
@@ -67,12 +72,14 @@ class LoginState extends State<Login> with TickerProviderStateMixin {
                   ),
                 ),
                 AnimatedPositioned(
-                  top: isLogin ? screenHeight : screenHeight * 2 / 3,
+                  top: isLogin
+                      ? ScreenUtil.screenHeight
+                      : ScreenUtil.screenHeight * 2 / 3,
                   left: 0,
-                  duration: Duration(milliseconds: animationDuration),
+                  duration: Duration(milliseconds: _animationDuration),
                   child: Container(
-                    width: screenWidth,
-                    height: screenHeight / 3,
+                    width: ScreenUtil.screenWidth,
+                    height: ScreenUtil.screenHeight / 3,
                     decoration: BoxDecoration(
                       color: ConstColor.white,
                       shape: BoxShape.rectangle,
@@ -135,7 +142,7 @@ class LoginState extends State<Login> with TickerProviderStateMixin {
                             maxLines: 1,
                             cursorWidth: 1,
                             autofocus: true,
-                            obscureText: true,
+                            obscureText: !pwdVisible,
                             textAlignVertical: TextAlignVertical.center,
                             textInputAction: TextInputAction.next,
                             decoration: InputDecoration(
@@ -143,11 +150,20 @@ class LoginState extends State<Login> with TickerProviderStateMixin {
                               suffixIcon: Align(
                                 widthFactor: 1,
                                 heightFactor: 1,
-                                child: SvgPicture.asset(
-                                  'assets/ic_pwd_hide.svg',
-                                  color: ConstColor.color1,
-                                  width: 20,
-                                  height: 20,
+                                child: IconButton(
+                                  onPressed: () {
+                                    setState(() {
+                                      pwdVisible = !pwdVisible;
+                                    });
+                                  },
+                                  icon: SvgPicture.asset(
+                                    pwdVisible
+                                        ? 'assets/ic_pwd_show.svg'
+                                        : 'assets/ic_pwd_hide.svg',
+                                    color: ConstColor.color1,
+                                    width: 20,
+                                    height: 20,
+                                  ),
                                 ),
                               ),
                               focusedBorder: OutlineInputBorder(
@@ -182,25 +198,7 @@ class LoginState extends State<Login> with TickerProviderStateMixin {
                           ),
                           child: FlatButton.icon(
                             onPressed: () {
-                              if (_userNameCt.text.isEmpty) {
-                                Fluttertoast.showToast(
-                                    msg: ConstString.pleaseInputAccount);
-                                return;
-                              }
-                              if (_tokenCt.text.isEmpty) {
-                                Fluttertoast.showToast(
-                                    msg: ConstString.pleaseInputPersonalToken);
-                                return;
-                              }
-                              setState(() {
-                                isLogin = true;
-                              });
-                              Future.delayed(
-                                  Duration(milliseconds: animationDuration),
-                                  () {
-                                ApiUser().getUserInfo(
-                                    _userNameCt.text, _tokenCt.text);
-                              });
+                              _login();
                             },
                             icon: SvgPicture.asset(
                               'assets/ic_next.svg',
@@ -226,5 +224,34 @@ class LoginState extends State<Login> with TickerProviderStateMixin {
         ),
       ),
     );
+  }
+
+  void _login() {
+    if (_userNameCt.text.isEmpty) {
+      Fluttertoast.showToast(msg: ConstString.pleaseInputAccount);
+      return;
+    }
+    if (_tokenCt.text.isEmpty) {
+      Fluttertoast.showToast(msg: ConstString.pleaseInputPersonalToken);
+      return;
+    }
+    setState(() {
+      isLogin = true;
+    });
+    Future.delayed(Duration(milliseconds: _animationDuration), () {
+      ApiUser().getUserInfo(_userNameCt.text, _tokenCt.text).then((res) {
+        if (res.succeed) {
+          Navigator.of(context).pushNamedAndRemoveUntil(
+            '/homepage',
+            (route) => route == null,
+          );
+        } else {
+          setState(() {
+            isLogin = false;
+          });
+          Fluttertoast.showToast(msg: ConstString.loginFailed);
+        }
+      });
+    });
   }
 }

@@ -11,4 +11,6 @@ class ConstString {
   static String get pleaseInputAccount => '请输入账号';
   static String get pleaseInputPwd => '请输入密码';
   static String get pleaseInputPersonalToken => '请输入个人授权码';
+
+  static String get loginFailed => '登录失败';
 }
