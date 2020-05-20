@@ -55,6 +55,12 @@ flutter:
     - assets/ic_home.svg
     - assets/ic_search.svg
     - assets/ic_email.svg
+    - assets/ic_location.svg
+    - assets/ic_organization.svg
+    - assets/ic_blog.svg
+    - assets/ic_star.svg
+    - assets/ic_following.svg
+    - assets/ic_follower.svg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
