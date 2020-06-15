@@ -7,7 +7,7 @@ import 'package:fluhub/model/user_res.dart';
 import 'package:fluhub/util/httputil.dart';
 
 class ApiUser {
-  Future<SimpleRes> getUserInfo(String userName, String personalToken,
+  static Future<SimpleRes> getUserInfo(String userName, String personalToken,
       {CancelToken cancelToken}) async {
     String accessToken = AuthMgr.generateAccessToken(userName, personalToken);
     Map<String, String> headers = {'Authorization': 'Basic $accessToken'};

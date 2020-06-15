@@ -10,22 +10,27 @@ class ContentView extends StatefulWidget {
 }
 
 class ContentViewState extends State<ContentView> {
+  ScrollController _controller;
+
   @override
   void initState() {
     super.initState();
+    _controller = PageController();
   }
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 300,
       child: PageView.builder(
         itemCount: 4,
-        scrollDirection: Axis.vertical,
-        controller: PageController(),
+        scrollDirection: Axis.horizontal,
+        controller: _controller,
         itemBuilder: (context, index) {
           if (index == 0) {
-            return ProfilerView();
+            return Padding(
+              padding: EdgeInsets.only(left: 60),
+              child: ProfilerView(),
+            );
           }
           return Text('$index');
         },

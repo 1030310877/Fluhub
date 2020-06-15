@@ -74,12 +74,12 @@ class LoginState extends State<Login> with TickerProviderStateMixin {
                 AnimatedPositioned(
                   top: isLogin
                       ? ScreenUtil.screenHeight
-                      : ScreenUtil.screenHeight * 2 / 3,
+                      : ScreenUtil.screenHeight * 2 / 3 - 24,
                   left: 0,
                   duration: Duration(milliseconds: _animationDuration),
                   child: Container(
                     width: ScreenUtil.screenWidth,
-                    height: ScreenUtil.screenHeight / 3,
+                    height: ScreenUtil.screenHeight / 3 + 24,
                     decoration: BoxDecoration(
                       color: ConstColor.white,
                       shape: BoxShape.rectangle,
@@ -190,7 +190,7 @@ class LoginState extends State<Login> with TickerProviderStateMixin {
                         ),
                         Container(
                           width: 300,
-                          margin: EdgeInsets.only(top: 16, bottom: 24),
+                          margin: EdgeInsets.only(top: 16),
                           decoration: BoxDecoration(
                             color: ConstColor.color5,
                             shape: BoxShape.rectangle,
@@ -239,7 +239,7 @@ class LoginState extends State<Login> with TickerProviderStateMixin {
       isLogin = true;
     });
     Future.delayed(Duration(milliseconds: _animationDuration), () {
-      ApiUser().getUserInfo(_userNameCt.text, _tokenCt.text).then((res) {
+      ApiUser.getUserInfo(_userNameCt.text, _tokenCt.text).then((res) {
         if (res.succeed) {
           Navigator.of(context).pushNamedAndRemoveUntil(
             '/homepage',

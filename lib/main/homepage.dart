@@ -17,18 +17,18 @@ class HomePage extends StatelessWidget {
           children: <Widget>[
             Positioned(
               left: 0,
+              top: 0,
+              right: 8,
+              bottom: 0,
+              child: ContentView(),
+            ),
+            Positioned(
+              left: 0,
               top: ScreenUtil.statusBarHeight,
               bottom: 0,
               child: SlideTabBar(
                 width: 60,
               ),
-            ),
-            Positioned(
-              left: 68,
-              top: ScreenUtil.statusBarHeight,
-              bottom: 0,
-              right: 8,
-              child: ContentView(),
             ),
           ],
         ),

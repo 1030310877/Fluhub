@@ -2,6 +2,7 @@ import 'package:fluhub/login/login.dart';
 import 'package:fluhub/main/homepage.dart';
 import 'package:fluhub/mgr/auth_mgr.dart';
 import 'package:fluhub/res/string.dart';
+import 'package:fluhub/util/httputil.dart';
 import 'package:fluhub/util/screenutil.dart';
 import 'package:flutter/material.dart';
 
@@ -31,6 +32,7 @@ class Splash extends StatelessWidget {
     Future.delayed(Duration(seconds: 2), () async {
       String token = await AuthMgr.getInstance().getAccessToken();
       if (token != null && token.isNotEmpty) {
+        HttpUtil.loginType = LoginType.personalToken;
         Navigator.of(context).pushNamedAndRemoveUntil(
           '/homepage',
           (route) => route == null,
